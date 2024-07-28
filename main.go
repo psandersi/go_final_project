@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	dbPath := "C:/Users/dashu/dev/go_final_project/scheduler.db"
+	dbPath := "../scheduler.db"
 	//Создаем или открываем базу данных
 	dbStorage, err := DoNewTable(dbPath)
 	if err != nil {
