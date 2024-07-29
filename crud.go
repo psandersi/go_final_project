@@ -10,7 +10,6 @@ import (
 
 // Добавляет задачу в таблицу и возвращает id добавленной задачи
 func AddTask(task Task) (int64, error) {
-	var dbFile = "../scheduler.db"
 	db, _ := sqlx.Connect("sqlite3", dbFile)
 	res, err := db.Exec("INSERT INTO scheduler (date, title, comment, repeat) VALUES (:date, :title, :comment, :repeat)",
 		sql.Named("date", task.Date), sql.Named("title", task.Title),
@@ -28,7 +27,6 @@ func AddTask(task Task) (int64, error) {
 // Функция GetTasksList возвращает список ближайщих задач. Количество задач регулируется в переменной limit
 func GetTasksList() ([]Task, error) {
 	limit := 10
-	var dbFile = "../scheduler.db"
 	db, _ := sqlx.Connect("sqlite3", dbFile)
 	var tasks []Task
 	var rows *sql.Rows
@@ -57,7 +55,6 @@ func GetTasksList() ([]Task, error) {
 // Функция GetTaskByID возвращает задачу по указанному id
 func GetTaskByID(id string) (Task, error) {
 	var task Task
-	var dbFile = "../scheduler.db"
 	db, _ := sqlx.Connect("sqlite3", dbFile)
 	row := db.QueryRow("SELECT * FROM scheduler WHERE id = :id", sql.Named("id", id))
 
@@ -72,7 +69,6 @@ func GetTaskByID(id string) (Task, error) {
 
 // Функция PutTask редактирует задачу
 func PutTask(task Task) error {
-	var dbFile = "../scheduler.db"
 	db, _ := sqlx.Connect("sqlite3", dbFile)
 	res, err := db.Exec("UPDATE scheduler SET date = :date, title = :title, comment = :comment, repeat = :repeat WHERE id = :id",
 		sql.Named("date", task.Date),
@@ -91,7 +87,6 @@ func PutTask(task Task) error {
 
 // Функция DeleteTask удаляет задачу
 func DeleteTask(id string) error {
-	var dbFile = "../scheduler.db"
 	db, _ := sqlx.Connect("sqlite3", dbFile)
 	_, err := GetTaskByID(id)
 	if err != nil {

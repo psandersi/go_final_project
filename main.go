@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	dbPath := "../scheduler.db"
+	dbPath := "scheduler.db"
 	//Создаем или открываем базу данных
 	dbStorage, err := DoNewTable(dbPath)
 	if err != nil {
