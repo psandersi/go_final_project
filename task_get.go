@@ -20,9 +20,9 @@ func writeTaskGet(task Task, st int, err error, w http.ResponseWriter) {
 		return
 	}
 
-	if err != nil {
-		log.Println(err)
-	}
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(res)
 	if err != nil {

@@ -52,14 +52,14 @@ func jsonAns(id int64, st int, err error, w http.ResponseWriter) {
 	if err != nil {
 		log.Println(err)
 	}
-	return
+
 }
 
 // Функция checkData проверяет указанные даты на соответсвие формату
 func (task Task) checkData() (Task, error) {
 	var err error
 	if task.Title == "" {
-		err = errors.New("Title cannot be empty")
+		err = errors.New("title cannot be empty")
 		return Task{}, err
 	}
 	if len(task.Date) == 0 || strings.ToLower(task.Date) == "today" {

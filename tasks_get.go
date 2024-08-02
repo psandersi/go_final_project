@@ -7,11 +7,11 @@ import (
 )
 
 // Функция writeTasksGet возвращает ответ обработчика TasksGet: список ближайщих задач или ошибку
-func writeTasksGet(tasks []Task, err error, w http.ResponseWriter) {
+func writeTasksGet(tasks []Task, st int, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	var res []byte
 	if err != nil {
-		jsonError(err, w)
+		jsonError(err, st, w)
 		return
 	} else {
 		if len(tasks) == 0 {
@@ -50,5 +50,5 @@ func TasksGet(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	writeTasksGet(tasks, err, w)
+	writeTasksGet(tasks, http.StatusInternalServerError, err, w)
 }
