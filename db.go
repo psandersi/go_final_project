@@ -18,20 +18,24 @@ date — дата задачи;
 title — заголовок задачи;
 comment — комментарий к задаче;
 repeat — строковое поле; ID_Date - индекс по дате */
+var install bool
+
 func CreateTable(dbPath string) error {
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
-		return err
+		if os.IsNotExist(err) {
+			install = true
+		} else {
+			log.Panic(err)
+		}
 	}
 	defer db.Close()
 	_, err = db.Exec("CREATE TABLE scheduler (id  INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, title VARCHAR(128) NOT NULL, comment VARCHAR, repeat VARCHAR(128) )")
 	if err != nil {
-		log.Panic(err)
 		return err
 	}
 	_, err = db.Exec("CREATE INDEX ID_Date ON scheduler (date)")
 	if err != nil {
-		log.Panic(err)
 		return err
 	}
 	return nil
@@ -44,7 +48,6 @@ func CreateTable(dbPath string) error {
 func DoNewTable(dbPath string) (Storage, error) {
 	//проверяем существует ли файл
 	_, err := os.Stat(dbPath)
-	var install bool
 	if err != nil {
 		install = true
 	}
@@ -65,7 +68,7 @@ func DoNewTable(dbPath string) (Storage, error) {
 	if install {
 		err = CreateTable(dbPath)
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
 		}
 	}
 

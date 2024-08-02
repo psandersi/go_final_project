@@ -7,14 +7,17 @@ import (
 )
 
 // Функция writeTaskGet возвращает ответ обработчика TaskGet или ошибку
-func writeTaskGet(task Task, err error, w http.ResponseWriter) {
+func writeTaskGet(task Task, st int, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	var res []byte
 	if err != nil {
-		jsonError(err, w)
+		jsonError(err, st, w)
 		return
-	} else {
-		res, err = json.Marshal(task)
+	}
+	res, err = json.Marshal(task)
+	if err != nil {
+		jsonError(err, http.StatusBadRequest, w)
+		return
 	}
 
 	if err != nil {
@@ -35,7 +38,7 @@ func TaskGet(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 	task, err = GetTaskByID(id)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
-	writeTaskGet(task, err, w)
+	writeTaskGet(task, http.StatusInternalServerError, err, w)
 }

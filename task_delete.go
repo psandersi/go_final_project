@@ -12,7 +12,7 @@ func TaskDelete(w http.ResponseWriter, r *http.Request) {
 
 	err = DeleteTask(id)
 	if err != nil {
-		jsonError(err, w)
+		jsonError(err, http.StatusInternalServerError, w)
 		return
 	}
 	emptyJson(w)

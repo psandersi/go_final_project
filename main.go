@@ -21,7 +21,11 @@ func main() {
 	r.Handle("/*", http.FileServer(http.Dir("web")))
 	r.Get("/api/nextdate", GetNextDate)
 	r.Get("/api/tasks", TasksGet)
-	r.HandleFunc("/api/task", TaskHandler)
+	//r.HandleFunc("/api/task", TaskHandler)
+	r.Post("/api/task", TaskPost)
+	r.Put("/api/task", TaskPut)
+	r.Get("/api/task", TaskGet)
+	r.Delete("/api/task", TaskDelete)
 	r.Post("/api/task/done", PostTaskDone)
 	if err := http.ListenAndServe(":7540", r); err != nil {
 		fmt.Printf("Error while opening server: %s", err.Error())

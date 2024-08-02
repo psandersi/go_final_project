@@ -15,13 +15,13 @@ func PostTaskDone(w http.ResponseWriter, r *http.Request) {
 
 	task, err := GetTaskByID(id)
 	if err != nil {
-		jsonError(err, w)
+		jsonError(err, http.StatusInternalServerError, w)
 		return
 	}
 	if len(task.Repeat) == 0 {
 		err = DeleteTask(id)
 		if err != nil {
-			jsonError(err, w)
+			jsonError(err, http.StatusInternalServerError, w)
 			return
 		}
 		emptyJson(w)
@@ -29,14 +29,14 @@ func PostTaskDone(w http.ResponseWriter, r *http.Request) {
 	} else {
 		nextDate, err := NextDate(time.Now(), task.Date, task.Repeat)
 		if err != nil {
-			jsonError(err, w)
+			jsonError(err, http.StatusInternalServerError, w)
 			return
 		}
 		task.Date = nextDate
 	}
 	err = PutTask(task)
 	if err != nil {
-		jsonError(err, w)
+		jsonError(err, http.StatusInternalServerError, w)
 		return
 	}
 	emptyJson(w)

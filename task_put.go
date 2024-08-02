@@ -22,10 +22,10 @@ func emptyJson(w http.ResponseWriter) {
 }
 
 // Функция writeTaskPut возвращает ошибку в виде json или пустой json
-func writeTaskPut(task Task, err error, w http.ResponseWriter) {
+func writeTaskPut(task Task, st int, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
-		jsonError(err, w)
+		jsonError(err, st, w)
 		return
 	} else {
 		emptyJson(w)
@@ -42,21 +42,21 @@ func TaskPut(w http.ResponseWriter, r *http.Request) {
 
 	_, err = buf.ReadFrom(r.Body)
 	if err != nil {
-		writeTaskPut(task, err, w)
+		writeTaskPut(task, http.StatusBadRequest, err, w)
 		return
 	}
 
 	if err = json.Unmarshal(buf.Bytes(), &task); err != nil {
-		writeTaskPut(task, err, w)
+		writeTaskPut(task, http.StatusBadRequest, err, w)
 		return
 	}
 
 	task, err = task.checkData()
 	if err != nil {
-		writeTaskPut(task, err, w)
+		writeTaskPut(task, http.StatusInternalServerError, err, w)
 		return
 	}
 
 	err = PutTask(task)
-	writeTaskPut(task, err, w)
+	writeTaskPut(task, http.StatusInternalServerError, err, w)
 }
